@@ -44,7 +44,7 @@ namespace Aplication_Import
                     //si es que hay un error entonces grabamos el error en tabla del sql
                     if (_error_tarea.Trim().Length > 0)
                     {
-                        Importar_Data.insertar_error_service(_error_tarea);
+                        //Importar_Data.insertar_error_service(_error_tarea);
                     }
 
                     //una vez se haya realizado las importaciones
@@ -61,7 +61,7 @@ namespace Aplication_Import
                 _error_tarea += "===>>" + ex.Message;
                 if (_error_tarea.Trim().Length > 0)
                 {
-                    Importar_Data.insertar_error_service(_error_tarea);
+                    //Importar_Data.insertar_error_service(_error_tarea);
                 }
 
                 if (_valor == 1)

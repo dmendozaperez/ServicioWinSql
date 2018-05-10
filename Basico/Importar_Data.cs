@@ -101,36 +101,40 @@ namespace Basico
                                         
                                         if (verror.Length==0)
                                         {
-                                            string _archivo_fac = carpetatienda  +"\\FFACTC.DBF";
+                                            // string _archivo_fac = carpetatienda  +"\\FFACTC.DBF";
 
                                             //en este verifico si el dbf existe
-                                            if (System.IO.File.Exists(@_archivo_fac))
-                                            {
+                                            //if (System.IO.File.Exists(@_archivo_fac))
+                                            //{
 
-                                                if (centidad == "50541")
-                                                {
-                                                    actualizardata(carpetatienda, centidad, name, ref verror);
-                                                }
+                                            //if (centidad == "50277")
+                                            //{
+                                                actualizardata(carpetatienda, centidad, name, ref verror);
+                                            //}
 
-                                            }
+                                            //}
 
                                             //borrar el archivo zip
                                             if (verror.Length==0)
                                             {
-                                                if (centidad == "50541")
-                                                {
+                                                //if (centidad == "50541")
+                                                //{
                                                     if (System.IO.File.Exists(@filesrar[irar].ToString()))
                                                     {
                                                         System.IO.File.Delete(@filesrar[irar].ToString());
                                                     }
-                                                }
+                                                //}
+                                            }
+                                            else
+                                            {
+                                                insertar_error_service(centidad, verror, name);
                                             }
                                         }
                                         else
                                         {
-                                            
+                                            insertar_error_service(centidad, verror, name);
                                         }
-
+                                        verror = "";
                                         verror_procesos += verror;
                                     }
                                     //byte[] xml = File.ReadAllBytes(filesrar[irar].ToString());
@@ -200,7 +204,7 @@ namespace Basico
             }
             catch(Exception exc)
             {
-                _error = exc.Message;
+                _error = exc.Message + " ==> El Archivo esta dañado";
             }
             return _error;
         }
@@ -331,7 +335,7 @@ namespace Basico
            if (cn.State == ConnectionState.Open) cn.Close();
            return _estado_servicio;
         }
-       public static void insertar_error_service(string _error)
+       public static void insertar_error_service(string _codtda,string _error,string _namefile)
        {
            string sqlquery = "USP_Insertar_Errores_Service";
            SqlConnection cn = null;
@@ -343,8 +347,10 @@ namespace Basico
                cmd = new SqlCommand(sqlquery, cn);
                cmd.CommandTimeout = 0;
                cmd.CommandType = CommandType.StoredProcedure;
-               cmd.Parameters.AddWithValue("@error",_error);
-               cmd.ExecuteNonQuery();
+                cmd.Parameters.AddWithValue("@CODTDA", _codtda);
+                cmd.Parameters.AddWithValue("@error",_error);
+                cmd.Parameters.AddWithValue("@nom_archivo", _namefile);
+                cmd.ExecuteNonQuery();
            }
            catch
            {
